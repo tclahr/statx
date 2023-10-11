@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 {
     int ret;
     char file_type = '?';
-    char symlink[1024];
+    char symlink[10240];
     int atflag = AT_SYMLINK_NOFOLLOW;
     unsigned int mask = STATX_ALL;
     struct statx stx;
