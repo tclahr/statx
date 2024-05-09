@@ -1,7 +1,7 @@
 CFLAGS=-static -O2
 BIN_DIR=bin/linux
 
-all: arm arm64 i386 x86_64 mips mips64 ppc ppc64 ppc64le s390 sparc64
+all: arm arm64 i386 x86_64 mips mips64 ppc ppc64 ppc64le s390x sparc64
 
 arm: statx.c
 	mkdir -p $(BIN_DIR)/$@
@@ -39,7 +39,7 @@ ppc64le: statx.c
 	mkdir -p $(BIN_DIR)/$@
 	powerpc64le-linux-gnu-gcc $(CFLAGS) -o $(BIN_DIR)/$@/statx statx.c
 
-s390: statx.c
+s390x: statx.c
 	mkdir -p $(BIN_DIR)/$@
 	s390x-linux-gnu-gcc $(CFLAGS) -o $(BIN_DIR)/$@/statx statx.c
 
