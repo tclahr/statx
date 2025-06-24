@@ -49,6 +49,7 @@ int main(int argc, char **argv)
         printf("0");
 
         // name
+	memset(&symlink, 0, sizeof(symlink));
         ret = readlink(argv[i], symlink, sizeof(symlink));
         if (ret > 0)
             printf("|%s -> %s", argv[i], symlink);
