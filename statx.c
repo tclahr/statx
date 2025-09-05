@@ -97,13 +97,13 @@ int main(int argc, char **argv)
             printf("%c%c%c%c%c%c%c%c%c",
                 stx.stx_mode & S_IRUSR ? 'r' : '-',
                 stx.stx_mode & S_IWUSR ? 'w' : '-',
-                stx.stx_mode & S_IXUSR ? 'x' : '-',
+                stx.stx_mode & S_IXUSR ? ( stx.stx_mode & S_ISUID  ?'s' : 'x' ) : ( stx.stx_mode & S_ISUID  ?'S' : '-' ),
                 stx.stx_mode & S_IRGRP ? 'r' : '-',
                 stx.stx_mode & S_IWGRP ? 'w' : '-',
-                stx.stx_mode & S_IXGRP ? 'x' : '-',
+                stx.stx_mode & S_IXGRP ? ( stx.stx_mode & S_ISGID  ?'s' : 'x' ) : ( stx.stx_mode & S_ISGID  ?'S' : '-' ),
                 stx.stx_mode & S_IROTH ? 'r' : '-',
                 stx.stx_mode & S_IWOTH ? 'w' : '-',
-                stx.stx_mode & S_IXOTH ? 'x' : '-');
+                stx.stx_mode & S_IXOTH ? ( stx.stx_mode & S_ISVTX  ?'t' : 'x' ) : ( stx.stx_mode & S_ISVTX  ?'T' : '-' ));
         else
             printf("?????????");
 
