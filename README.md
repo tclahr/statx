@@ -4,7 +4,7 @@ This program uses the ```statx``` system call to return file status (extended) i
 
 ### Body file format
 
-```
+```text
 MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
 ```
 
@@ -23,7 +23,7 @@ make ARCH
 ### Example
 
 ```shell
-./statx /etc        
+./statx /etc
 0|/etc|269|drwxr-xr-x|0|0|3242|1696957845|1696940645|1696940645|1678364047
 ```
 

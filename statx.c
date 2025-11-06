@@ -25,7 +25,6 @@ ssize_t statx(int dfd, const char *filename, unsigned flags,
 
 int main(int argc, char **argv)
 {
-    int ret;
     char file_type = '?';
     char symlink[10240];
     int atflag = AT_SYMLINK_NOFOLLOW;
@@ -33,11 +32,16 @@ int main(int argc, char **argv)
     struct statx stx;
     int exit_code = EXIT_SUCCESS;
 
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s file1 [file2 ...]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
     memset(&stx, 0xbf, sizeof(stx));
 
     for (int i = 1; i < argc; i++) {
 
-        ret = statx(AT_FDCWD, argv[i], atflag, mask, &stx);
+        ssize_t ret = statx(AT_FDCWD, argv[i], atflag, mask, &stx);
         if (ret < 0)
         {
             perror(argv[i]);
@@ -48,10 +52,10 @@ int main(int argc, char **argv)
         // MD5
         printf("0");
 
-        // name
-	memset(&symlink, 0, sizeof(symlink));
-        ret = readlink(argv[i], symlink, sizeof(symlink));
-        if (ret > 0)
+        // name (and symlink target if any)
+	    memset(&symlink, 0, sizeof(symlink));
+        ssize_t len = readlink(argv[i], symlink, sizeof(symlink));
+        if (len > 0)
             printf("|%s -> %s", argv[i], symlink);
         else
             printf("|%s", argv[i]);
@@ -62,32 +66,17 @@ int main(int argc, char **argv)
         else
             printf("|0");
 
-        // type
+        // file type
         if (stx.stx_mask & STATX_TYPE)
         {
-            switch (stx.stx_mode & S_IFMT)
-            {
-            case S_IFIFO:
-                file_type = 'p';
-                break;
-            case S_IFCHR:
-                file_type = 'c';
-                break;
-            case S_IFDIR:
-                file_type = 'd';
-                break;
-            case S_IFBLK:
-                file_type = 'b';
-                break;
-            case S_IFREG:
-                file_type = '-';
-                break;
-            case S_IFLNK:
-                file_type = 'l';
-                break;
-            case S_IFSOCK:
-                file_type = 's';
-                break;
+            switch (stx.stx_mode & S_IFMT) {
+                case S_IFIFO: file_type = 'p'; break;
+                case S_IFCHR: file_type = 'c'; break;
+                case S_IFDIR: file_type = 'd'; break;
+                case S_IFBLK: file_type = 'b'; break;
+                case S_IFREG: file_type = '-'; break;
+                case S_IFLNK: file_type = 'l'; break;
+                case S_IFSOCK: file_type = 's'; break;
             }
         }
         printf("|%c", file_type);
